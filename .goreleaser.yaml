@@ -1,0 +1,56 @@
+version: 2
+
+project_name: linkding
+
+before:
+  hooks:
+    - go mod tidy
+    - go install github.com/google/go-licenses@v1.6.0
+    - bash scripts/generate-third-party-notices.sh
+
+builds:
+  - id: linkding
+    main: ./cmd/linkding
+    binary: linkding
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X=github.com/swtormy-agents/linkding-cli/internal/cli.Version={{.Version}}
+
+archives:
+  - id: default
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - LICENSE
+      - NOTICE
+      - THIRD_PARTY_NOTICES
+      - src: third_party_licenses/**
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^chore:'
+      - '^test:'
+
+release:
+  draft: true
+  mode: replace
