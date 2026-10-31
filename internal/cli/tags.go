@@ -50,9 +50,13 @@ func (a *app) tagsGetCmd() *cobra.Command {
 		Short: "Retrieve one tag by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			id, err := parsePositiveID(args[0])
+			if err != nil {
+				return err
+			}
 			return a.do(context.Background(), linkding.Request{
 				Method: http.MethodGet,
-				Path:   "/api/tags/" + args[0] + "/",
+				Path:   "/api/tags/" + id + "/",
 			})
 		},
 	}

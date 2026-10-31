@@ -21,6 +21,18 @@ certutil -hashfile linkding.exe SHA256        # Windows
 
 Releases are published as **drafts** first; pick the latest draft or published release from the maintainer.
 
+### Install script
+
+Prefer downloading a pinned release script, inspecting it, then running it (do not pipe `curl` straight into `bash`):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/swtormy-agents/linkding-cli/v0.1.0/scripts/install.sh -o install.sh
+less install.sh   # review contents
+bash install.sh
+```
+
+Optional: `sha256sum install.sh` and compare against a hash you trust before `bash install.sh`.
+
 ### Go install
 
 ```bash
