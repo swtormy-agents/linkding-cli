@@ -119,7 +119,10 @@ func (a *app) bookmarksGetCmd() *cobra.Command {
 		Short: "Retrieve one bookmark by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := args[0]
+			id, err := parsePositiveID(args[0])
+			if err != nil {
+				return err
+			}
 			return a.do(context.Background(), linkding.Request{
 				Method: http.MethodGet,
 				Path:   "/api/bookmarks/" + id + "/",
@@ -212,9 +215,13 @@ func (a *app) bookmarksUpdateCmd() *cobra.Command {
 			if patch {
 				method = http.MethodPatch
 			}
+			id, err := parsePositiveID(args[0])
+			if err != nil {
+				return err
+			}
 			return a.do(context.Background(), linkding.Request{
 				Method: method,
-				Path:   "/api/bookmarks/" + args[0] + "/",
+				Path:   "/api/bookmarks/" + id + "/",
 				Body:   body,
 			})
 		},
@@ -238,9 +245,13 @@ func (a *app) bookmarksArchiveCmd(archive bool) *cobra.Command {
 			if err := a.requireWrite(action); err != nil {
 				return err
 			}
+			id, err := parsePositiveID(args[0])
+			if err != nil {
+				return err
+			}
 			return a.do(context.Background(), linkding.Request{
 				Method: http.MethodPost,
-				Path:   fmt.Sprintf("/api/bookmarks/%s/%s", args[0], pathSuffix),
+				Path:   fmt.Sprintf("/api/bookmarks/%s/%s", id, pathSuffix),
 			})
 		},
 	}
@@ -255,9 +266,13 @@ func (a *app) bookmarksDeleteCmd() *cobra.Command {
 			if err := a.requireWrite("bookmarks delete"); err != nil {
 				return err
 			}
+			id, err := parsePositiveID(args[0])
+			if err != nil {
+				return err
+			}
 			return a.do(context.Background(), linkding.Request{
 				Method: http.MethodDelete,
-				Path:   "/api/bookmarks/" + args[0] + "/",
+				Path:   "/api/bookmarks/" + id + "/",
 			})
 		},
 	}

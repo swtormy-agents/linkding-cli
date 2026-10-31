@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Install linkding from GitHub Releases (draft or published).
-#   curl -fsSL https://raw.githubusercontent.com/swtormy-agents/linkding-cli/main/scripts/install.sh | bash
+# Pinned one-liner (review before running):
+#   curl -fsSL https://raw.githubusercontent.com/swtormy-agents/linkding-cli/v0.1.0/scripts/install.sh -o install.sh
+#   less install.sh   # or your editor
+#   bash install.sh
+# Or download, inspect, then run without piping curl directly to bash:
+#   curl -fsSL https://raw.githubusercontent.com/swtormy-agents/linkding-cli/v0.1.0/scripts/install.sh -o install.sh
+#   sha256sum install.sh   # compare to a known hash if you have one
+#   bash install.sh
 # Environment:
 #   LINKDING_VERSION     release tag to install (default: latest)
 #   LINKDING_INSTALL_DIR target directory (default: /usr/local/bin if writable, else ~/.local/bin)
