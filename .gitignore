@@ -1,0 +1,6 @@
+/linkding
+/linkding.exe
+dist/
+*.test
+config.json
+third_party_licenses/
