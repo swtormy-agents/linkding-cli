@@ -139,7 +139,7 @@ func (a *app) redact(s string) string {
 func (a *app) loadConfig() error {
 	cfg, err := linkding.LoadConfig(a.getenv)
 	if err != nil {
-		return runtimeErr(err)
+		return usageErr("%s", err.Error())
 	}
 	if a.baseURL != "" {
 		cfg.URL = a.baseURL
@@ -147,6 +147,16 @@ func (a *app) loadConfig() error {
 	if a.allowWrite {
 		cfg.AllowWrite = true
 		cfg.AllowWriteSource = "--allow-write"
+	}
+	if cfg.URL != "" {
+		n, insecure, err := linkding.ValidateBaseURL(cfg.URL)
+		if err != nil {
+			return usageErr("%s", err.Error())
+		}
+		cfg.URL = n
+		if insecure {
+			fmt.Fprintln(a.errOut, "linkding: warning: LINKDING_URL uses http://; prefer https://")
+		}
 	}
 	a.cfg = cfg
 	return nil

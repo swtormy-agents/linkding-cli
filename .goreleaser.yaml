@@ -4,7 +4,6 @@ project_name: linkding
 
 before:
   hooks:
-    - go mod tidy
     - go install github.com/google/go-licenses@v1.6.0
     - bash scripts/generate-third-party-notices.sh
 

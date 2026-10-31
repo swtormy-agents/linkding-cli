@@ -67,6 +67,13 @@ func LoadConfig(getenv func(string) string) (Config, error) {
 	if src != "" {
 		cfg.AllowWriteSource = src
 	}
+	if cfg.URL != "" {
+		n, _, err := ValidateBaseURL(cfg.URL)
+		if err != nil {
+			return Config{}, err
+		}
+		cfg.URL = n
+	}
 	return cfg, nil
 }
 

@@ -131,6 +131,37 @@ func TestReportErrorRedactsToken(t *testing.T) {
 	}
 }
 
+func TestStatusHTTPWarning(t *testing.T) {
+	getenv := func(k string) string {
+		if k == "LINKDING_URL" {
+			return "http://127.0.0.1:8000"
+		}
+		return ""
+	}
+	var out, errOut bytes.Buffer
+	code := Execute([]string{"status"}, strings.NewReader(""), &out, &errOut, getenv)
+	if code != 0 {
+		t.Fatalf("code=%d stderr=%s", code, errOut.String())
+	}
+	if !strings.Contains(errOut.String(), "http://") {
+		t.Fatalf("expected http warning, stderr=%q", errOut.String())
+	}
+}
+
+func TestInvalidURLRejected(t *testing.T) {
+	getenv := func(k string) string {
+		if k == "LINKDING_URL" {
+			return "not-a-url"
+		}
+		return ""
+	}
+	var out, errOut bytes.Buffer
+	code := Execute([]string{"status"}, strings.NewReader(""), &out, &errOut, getenv)
+	if code != 2 {
+		t.Fatalf("code=%d stderr=%s", code, errOut.String())
+	}
+}
+
 func TestStatusWithoutToken(t *testing.T) {
 	getenv := func(k string) string {
 		if k == "LINKDING_URL" {
